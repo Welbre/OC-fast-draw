@@ -38,10 +38,10 @@ end
 ---@param x integer
 ---@param y integer
 function bba:get(x, y)
-    if x >= self.m_size[1] then error(string.format("x(%d) is out of range(%d)", x, self.m_size[1]), 2) end
-    if y >= self.m_size[2] then error(string.format("x(%d) is out of range(%d)", y, self.m_size[2]), 2) end
+    if (x >= self.m_size[1]) or (x < 0) then error(string.format("x(%d) is out of range(%d)", x, self.m_size[1]), 2) end
+    if (y >= self.m_size[2]) or (y < 0) then error(string.format("x(%d) is out of range(%d)", y, self.m_size[2]), 2) end
     local index = (x * self.m_size[2]) + y
-    if index >= self.size then error(string.format("fail at try access addrress #%d (%d,%d), out of range(%d)", index, x, y, self.size - 1), 2) end
+    if (index >= self.size) or (index < 0) then error(string.format("fail at try access addrress #%d (%d,%d), out of range(%d)", index, x, y, self.size - 1), 2) end
 
     return bArray.get(self, index)
 end
@@ -49,13 +49,15 @@ end
 ---@return fun():number|nil, number|nil, number|nil
 function bba:interator()
     local x = -1
-    local y = -1
+    local y = 0
     return function()
         x = x + 1
-        y = y + 1
-        if x >= self.m_size[1] then x = 0 end
-        if y >= self.m_size[2] then y = 0 end
-        if ((x*self.m_size[1]) + y) >= self.m_size[1] * self.m_size[2] then return nil, nil, nil end
+        if x >= self.m_size[1] then
+            x = 0
+            y = y + 1
+        end
+        if y >= self.m_size[2] then return nil,nil,nil end
+        --if ((x*self.m_size[1]) + y) >= self.m_size[1] * self.m_size[2] then return nil, nil, nil end
         return x, y, self:get(x, y)
     end
 end

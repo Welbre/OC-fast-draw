@@ -102,6 +102,8 @@ function canvas:fill(x, y, size_x, size_y, char)
             set(self.c, string.byte(char), __x, __y)
         end
     end
+    self.gpu.setForeground((self.f_r:get(x-1, y-1) << 16) | (self.f_g:get(x-1, y-1) << 8) | self.f_b:get(x-1, y-1))
+    self.gpu.setBackground((self.r:get(x-1, y-1) << 16) | (self.g:get(x-1, y-1) << 8) | self.b:get(x-1, y-1))
     self.gpu.fill(x,y,size_x,size_y, char)
 end
 
